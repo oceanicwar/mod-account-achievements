@@ -42,7 +42,7 @@ public:
 			{
 				Field* fields = result1->Fetch();
 
-				uint32 race = fields[1].GetUInt8();
+				uint32 race = fields[1].Get<uint8>();
 
 				if ((Player::TeamIdForRace(race) == Player::TeamIdForRace(pPlayer->getRace())) || !limitrace)
 					Guids.push_back(result1->Fetch()[0].GetUInt32());
