@@ -13,7 +13,6 @@
 #include "ScriptMgr.h"
 #include "Chat.h"
 #include "Player.h"
-#include "DatabaseEnv.h"
 
 class AccountAchievements : public PlayerScript
 {
@@ -35,7 +34,7 @@ public:
             }
 
 			std::vector<uint32> Guids;
-			QueryResult result1 = CharacterDatabase.PQuery("SELECT guid, race FROM characters WHERE account = %u", pPlayer->GetSession()->GetAccountId());
+			QueryResult result1 = CharacterDatabase.Query("SELECT guid, race FROM characters WHERE account = %u", pPlayer->GetSession()->GetAccountId());
 			if (!result1)
 				return;
 
@@ -54,7 +53,7 @@ public:
 
 			for (auto& i : Guids)
 			{
-				QueryResult result2 = CharacterDatabase.PQuery("SELECT achievement FROM character_achievement WHERE guid = %u", i);
+				QueryResult result2 = CharacterDatabase.Query("SELECT achievement FROM character_achievement WHERE guid = %u", i);
 				if (!result2)
 					continue;
 
