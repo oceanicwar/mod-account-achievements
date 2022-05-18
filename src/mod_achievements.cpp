@@ -45,7 +45,7 @@ public:
 				uint32 race = fields[1].Get<uint8>();
 
 				if ((Player::TeamIdForRace(race) == Player::TeamIdForRace(pPlayer->getRace())) || !limitrace)
-					Guids.push_back(result1->Fetch()[0].GetUInt32());
+					Guids.push_back(result1->Fetch()[0].Get<uint32>());
 
 			} while (result1->NextRow());
 
@@ -59,7 +59,7 @@ public:
 
 				do
 				{
-					Achievement.push_back(result2->Fetch()[0].GetUInt32());
+					Achievement.push_back(result2->Fetch()[0].Get<uint32>());
 				} while (result2->NextRow());
 			}
 
