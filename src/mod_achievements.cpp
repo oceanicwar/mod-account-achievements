@@ -27,9 +27,9 @@ public:
 
 	void OnLogin(Player* pPlayer)
 	{
-		if (sConfigMgr->GetBoolDefault("Account.Achievements.Enable", true))
+		if (sConfigMgr->GetOption<bool>("Account.Achievements.Enable", true))
         {
-			if (sConfigMgr->GetBoolDefault("Account.Achievements.Announce", true))
+			if (sConfigMgr->GetOption<bool>("Account.Achievements.Announce", true))
             {
                 ChatHandler(pPlayer->GetSession()).SendSysMessage("This server is running the |cff4CFF00AccountAchievements |rmodule.");
             }
@@ -74,7 +74,7 @@ public:
 
 	void AddAchievements(Player* player, uint32 AchievementID)
 	{
-		if (sConfigMgr->GetBoolDefault("Account.Achievements.Enable", true))
+		if (sConfigMgr->GetOption<bool>("Account.Achievements.Enable", true))
         {
 			if (limitlevel)
 				setlevel = minlevel;
