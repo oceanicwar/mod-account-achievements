@@ -14,7 +14,6 @@
 #include "Chat.h"
 #include "Player.h"
 
-
 class AccountAchievements : public PlayerScript
 {
 	static const bool limitrace = true; // This set to true will only achievements from chars on the same team, do what you want. NOT RECOMMANDED TO BE CHANGED!!!
@@ -27,15 +26,15 @@ public:
 
 	void OnLogin(Player* pPlayer)
 	{
-		if (sConfigMgr->GetBoolDefault("Account.Achievements.Enable", true))
+		if (sConfigMgr->GetOption<bool>("Account.Achievements.Enable", true))
         {
-			if (sConfigMgr->GetBoolDefault("Account.Achievements.Announce", true))
+			if (sConfigMgr->GetOption<bool>("Account.Achievements.Announce", true))
             {
                 ChatHandler(pPlayer->GetSession()).SendSysMessage("This server is running the |cff4CFF00AccountAchievements |rmodule.");
             }
 
 			std::vector<uint32> Guids;
-			QueryResult result1 = CharacterDatabase.PQuery("SELECT guid, race FROM characters WHERE account = %u", pPlayer->GetSession()->GetAccountId());
+			QueryResult result1 = CharacterDatabase.Query("SELECT guid, race FROM characters WHERE account = {}", pPlayer->GetSession()->GetAccountId());
 			if (!result1)
 				return;
 
@@ -43,10 +42,10 @@ public:
 			{
 				Field* fields = result1->Fetch();
 
-				uint32 race = fields[1].GetUInt8();
+				uint32 race = fields[1].Get<uint8>();
 
 				if ((Player::TeamIdForRace(race) == Player::TeamIdForRace(pPlayer->getRace())) || !limitrace)
-					Guids.push_back(result1->Fetch()[0].GetUInt32());
+					Guids.push_back(result1->Fetch()[0].Get<uint32>());
 
 			} while (result1->NextRow());
 
@@ -54,13 +53,13 @@ public:
 
 			for (auto& i : Guids)
 			{
-				QueryResult result2 = CharacterDatabase.PQuery("SELECT achievement FROM character_achievement WHERE guid = %u", i);
+				QueryResult result2 = CharacterDatabase.Query("SELECT achievement FROM character_achievement WHERE guid = {}", i);
 				if (!result2)
 					continue;
 
 				do
 				{
-					Achievement.push_back(result2->Fetch()[0].GetUInt32());
+					Achievement.push_back(result2->Fetch()[0].Get<uint32>());
 				} while (result2->NextRow());
 			}
 
@@ -74,7 +73,7 @@ public:
 
 	void AddAchievements(Player* player, uint32 AchievementID)
 	{
-		if (sConfigMgr->GetBoolDefault("Account.Achievements.Enable", true))
+		if (sConfigMgr->GetOption<bool>("Account.Achievements.Enable", true))
         {
 			if (limitlevel)
 				setlevel = minlevel;
