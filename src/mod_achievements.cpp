@@ -123,7 +123,7 @@ void AccountAchievementsPlayerScript::AddAchievement(Player* player, uint32 achi
     auto achievement = sAchievementStore.LookupEntry(achievementId);
     if (!achievement)
     {
-        LOG_ERROR("module", Acore::StringFormatFmt("Tried to add achievement '{}' to player '{}' but the achievement does not exist!", player->GetPlayerName(), achievementId));
+        LOG_ERROR("module", Acore::StringFormatFmt("Tried to add achievement '{}' to player '{}' but the achievement does not exist!", player->GetName(), achievementId));
         return;
     }
 
