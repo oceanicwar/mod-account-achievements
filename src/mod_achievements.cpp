@@ -98,7 +98,7 @@ void AccountAchievementsPlayerScript::OnLogin(Player* player)
             uint32 achievementId = result2->Fetch()[0].Get<uint32>();
 
             // Only include whitelisted achievements.
-            if (!AchievementWhitelisted(achievementId))
+            if (!IsAchievementWhitelisted(achievementId))
             {
                 continue;
             }
@@ -109,11 +109,11 @@ void AccountAchievementsPlayerScript::OnLogin(Player* player)
 
     for (auto& i : achievements)
     {
-        AddAchievements(player, i);
+        AddAchievement(player, i);
     }
 }
 
-void AccountAchievementsPlayerScript::AddAchievements(Player* player, uint32 achievementId)
+void AccountAchievementsPlayerScript::AddAchievement(Player* player, uint32 achievementId)
 {
     if(player->HasAchieved(achievementId))
     {
@@ -130,7 +130,7 @@ void AccountAchievementsPlayerScript::AddAchievements(Player* player, uint32 ach
     player->CompletedAchievement(achievement);
 }
 
-bool AccountAchievementsPlayerScript::AchievementWhitelisted(uint32 achievementId)
+bool AccountAchievementsPlayerScript::IsAchievementWhitelisted(uint32 achievementId)
 {
     return achievementWhitelist.find(achievementId) != achievementWhitelist.end();
 }

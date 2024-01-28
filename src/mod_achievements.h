@@ -24,8 +24,8 @@ public:
 
 public:
     void OnLogin(Player* /*player*/) override;
-    void AddAchievements(Player* /*player*/, uint32 /*achievementId*/);
-    bool AchievementWhitelisted(uint32 /*achievementId*/);
+    void AddAchievement(Player* /*player*/, uint32 /*achievementId*/);
+    bool IsAchievementWhitelisted(uint32 /*achievementId*/);
 };
 
 #endif // MODULE_MOD_ACHIEVEMENTS
