@@ -67,7 +67,9 @@ void AccountAchievementsPlayerScript::OnLogin(Player* player)
     QueryResult result1 = CharacterDatabase.Query("SELECT guid, race FROM characters WHERE account = {}", player->GetSession()->GetAccountId());
 
     if (!result1)
+    {
         return;
+    }
 
     std::vector<uint32> guids;
 
@@ -82,7 +84,8 @@ void AccountAchievementsPlayerScript::OnLogin(Player* player)
             guids.push_back(result1->Fetch()[0].Get<uint32>());
         }
 
-    } while (result1->NextRow());
+    }
+    while (result1->NextRow());
 
     std::vector<uint32> achievements;
 
@@ -91,7 +94,9 @@ void AccountAchievementsPlayerScript::OnLogin(Player* player)
         QueryResult result2 = CharacterDatabase.Query("SELECT achievement FROM character_achievement WHERE guid = {}", i);
 
         if (!result2)
+        {
             continue;
+        }
 
         do
         {
@@ -104,7 +109,8 @@ void AccountAchievementsPlayerScript::OnLogin(Player* player)
             }
 
             achievements.push_back(achievementId);
-        } while (result2->NextRow());
+        }
+        while (result2->NextRow());
     }
 
     for (auto& i : achievements)
@@ -138,5 +144,5 @@ bool AccountAchievementsPlayerScript::IsAchievementWhitelisted(uint32 achievemen
 void AddAccountAchievementsScripts()
 {
     new AccountAchievementsWorldScript();
-	new AccountAchievementsPlayerScript();
+    new AccountAchievementsPlayerScript();
 }
