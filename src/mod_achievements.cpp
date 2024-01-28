@@ -1,14 +1,3 @@
-/*
-<--------------------------------------------------------------------------->
-- Developer(s): Lille Carl, Grim/Render
-- Complete: %100
-- ScriptName: 'AccountAchievements'
-- Comment: Tested and Works.
-- Orginial Creator: Lille Carl
-- Edited: Render/Grim
-<--------------------------------------------------------------------------->
-*/
-
 #include "mod_achievements.h"
 
 #include "Config.h"
