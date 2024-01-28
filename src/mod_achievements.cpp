@@ -64,55 +64,61 @@ void AccountAchievementsPlayerScript::OnLogin(Player* player)
         ChatHandler(player->GetSession()).SendSysMessage("This server is running the |cff4CFF00AccountAchievements |rmodule.");
     }
 
-    QueryResult result1 = CharacterDatabase.Query("SELECT guid, race FROM characters WHERE account = {}", player->GetSession()->GetAccountId());
-
-    if (!result1)
-    {
-        return;
-    }
-
     std::vector<uint32> guids;
 
-    do
+    // Select all the player guids
     {
-        Field* fields = result1->Fetch();
+        QueryResult qResult = CharacterDatabase.Query("SELECT guid, race FROM characters WHERE account = {}", player->GetSession()->GetAccountId());
 
-        uint32 race = fields[1].Get<uint8>();
-
-        if ((Player::TeamIdForRace(race) == player->GetTeamId()))
+        if (!qResult)
         {
-            guids.push_back(result1->Fetch()[0].Get<uint32>());
-        }
-
-    }
-    while (result1->NextRow());
-
-    std::vector<uint32> achievements;
-
-    for (auto& i : guids)
-    {
-        QueryResult result2 = CharacterDatabase.Query("SELECT achievement FROM character_achievement WHERE guid = {}", i);
-
-        if (!result2)
-        {
-            continue;
+            return;
         }
 
         do
         {
-            uint32 achievementId = result2->Fetch()[0].Get<uint32>();
+            Field* fields = qResult->Fetch();
 
-            // Only include whitelisted achievements.
-            if (!IsAchievementWhitelisted(achievementId))
+            uint32 race = fields[1].Get<uint8>();
+            uint32 guid = fields[0].Get<uint32>();
+
+            if ((Player::TeamIdForRace(race) == player->GetTeamId()))
+            {
+                guids.push_back(guid);
+            }
+
+        } while (qResult->NextRow());
+    }
+
+    std::vector<uint32> achievements;
+
+    // Use the guids to find achievements
+    {
+        for (auto& i : guids)
+        {
+            QueryResult qResult = CharacterDatabase.Query("SELECT achievement FROM character_achievement WHERE guid = {}", i);
+
+            if (!qResult)
             {
                 continue;
             }
 
-            achievements.push_back(achievementId);
+            do
+            {
+                uint32 achievementId = qResult->Fetch()[0].Get<uint32>();
+
+                // Only include whitelisted achievements.
+                if (!IsAchievementWhitelisted(achievementId))
+                {
+                    continue;
+                }
+
+                achievements.push_back(achievementId);
+            } while (qResult->NextRow());
         }
-        while (result2->NextRow());
     }
 
+    // Apply all the achievements found
     for (auto& i : achievements)
     {
         AddAchievement(player, i);
